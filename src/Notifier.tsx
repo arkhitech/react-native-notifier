@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import {
+  GestureHandlerRootView,
   PanGestureHandler,
   State,
   PanGestureHandlerStateChangeEvent,
@@ -276,35 +277,37 @@ export class NotifierRoot extends React.PureComponent<ShowNotificationParams, St
       typeof containerStyle === 'function' ? containerStyle(this.translateY) : containerStyle;
 
     return (
-      <PanGestureHandler
-        enabled={swipeEnabled}
-        onGestureEvent={this.onGestureEvent}
-        onHandlerStateChange={this.onHandlerStateChange}
-      >
-        <Animated.View
-          {...containerProps}
-          style={[
-            styles.container,
-            {
-              transform: [{ translateY: this.translateYInterpolated }],
-            },
-            additionalContainerStyle,
-          ]}
+      <GestureHandlerRootView>
+        <PanGestureHandler
+          enabled={swipeEnabled}
+          onGestureEvent={this.onGestureEvent}
+          onHandlerStateChange={this.onHandlerStateChange}
         >
-          <TouchableWithoutFeedback onPress={this.onPress}>
-            <View
-              onLayout={this.onLayout}
-              style={
-                Platform.OS === 'android' && translucentStatusBar
-                  ? styles.translucentStatusBarPadding
-                  : undefined
-              }
-            >
-              <Component title={title} description={description} {...componentProps} />
-            </View>
-          </TouchableWithoutFeedback>
-        </Animated.View>
-      </PanGestureHandler>
+          <Animated.View
+            {...containerProps}
+            style={[
+              styles.container,
+              {
+                transform: [{ translateY: this.translateYInterpolated }],
+              },
+              additionalContainerStyle,
+            ]}
+          >
+            <TouchableWithoutFeedback onPress={this.onPress}>
+              <View
+                onLayout={this.onLayout}
+                style={
+                  Platform.OS === 'android' && translucentStatusBar
+                    ? styles.translucentStatusBarPadding
+                    : undefined
+                }
+              >
+                <Component title={title} description={description} {...componentProps} />
+              </View>
+            </TouchableWithoutFeedback>
+          </Animated.View>
+        </PanGestureHandler>
+      </GestureHandlerRootView>
     );
   }
 }
